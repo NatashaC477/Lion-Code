@@ -21,6 +21,6 @@
 
 console.log("Welcome to the LionCode interpreter! I am currently under construction. 🚧 👷🏿‍♀️ Please check back later.");
 
-export function parse(input) {
-    return "I don't work";
-}
+// export function parse(input) {
+//     return "I don't work";
+// }

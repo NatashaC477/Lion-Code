@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "<img src=\"https://github.com/user-attachments/assets/d1a15484-2627-474b-b59e-856d8b4c8594\" width=20% height=20%>",
   "type": "module",
-  "main": "index.js",
+  "main": "src/lion-code.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "c8 node --test test/**/*.test.js"
   },
   "keywords": [],
   "author": "Natasha, A'Kaia, Hannah, Brisa, Jeron, and Dawit",
@@ -14,6 +14,7 @@
     "ohm-js": "^17.1.0"
   },
   "devDependencies": {
+    "c8": "^10.1.3",
     "prettier": "^3.4.2"
   }
 }
