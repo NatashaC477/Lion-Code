@@ -37,3 +37,6 @@ Iggy wove a strand of the Jesuit spirit into LionCode, determined that it would 
 | ``Prowl x < 3 |  roar -Still prowling on the bluff!-  x = x + 1 |```  |```function greet(name) {console.log("Hello, " + name + "!");}greet("Kaia")```;
 
 # If-Statements 
+| LionCode | Javascript |
+| --- | --- |
+| ``` roar -Hello LMU!- ``` | ```console.log("Hello LMU!")```|
