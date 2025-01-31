@@ -7,11 +7,15 @@ Once upon a time on the Bluff, Iggy the Lion faced a monumental challenge when h
 
 Iggy wove a strand of the Jesuit spirit into Lion Code, determined that it would not only help others write effective programs but also inspire them to approach technology with a heart rooted in empathy and a commitment to serving the greater good.
 
-## Serivice Features 
-- Bases on Javascript
+## Service and Justice Features 
+- Loyola Marymount inspired  
+- Based on Javascript
 - Dynamic
 - Object - Oriented
-- 
+- If, else statements
+- Functions
+- Optionals
+
 
 
 
