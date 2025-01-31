@@ -13,7 +13,9 @@ const grammar = ohm.grammar(` LionCode {
     space += " " | "\t"
     }`);
 
-grammar.match("print x").succeeded(); // true
-if (match.fialed()) {
+const match = grammar.match("print x").succeeded(); // true
+if (match.failed()) {
     console.error(match.message);
+} else {
+    console.log("Yay! The code is valid!");
 }
