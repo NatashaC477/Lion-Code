@@ -38,7 +38,7 @@ Iggy wove a strand of the Jesuit spirit into LionCode, determined that it would 
 ## If-Statements 
 | LionCode | Javascript |
 | --- | --- |
-| ``` ??? ``` | ```???```|
+| ```Lion code conditional``` | ```If (x < 5 ) {…} else if (x > 5){…} else {…};```|
 
 
 ##  Comments 
