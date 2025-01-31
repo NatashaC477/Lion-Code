@@ -44,7 +44,7 @@ Iggy wove a strand of the Jesuit spirit into LionCode, determined that it would 
 ##  Comments 
 | LionCode | Javascript |
 | --- | --- |
-| ``` ~comment goes here!~ ``` | ``` // comment goes here]```|
+| ``` ~comment goes here!~ ``` | ``` // comment goes here```|
 
 
 
