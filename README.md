@@ -22,7 +22,7 @@ Iggy wove a strand of the Jesuit spirit into LionCode, determined that it would 
 
 | LionCode | Javascript |
 | --- | --- |
-| ``` roar -Hello LMU!- ``` | ```console.log("Hello LMU!")```|
+| ``` roar -Hello LMU!- ``` | ```console.log("Hello LMU!")```| 
 
 ## Function Declaration 
 
