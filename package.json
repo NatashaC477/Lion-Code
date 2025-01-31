@@ -1,0 +1,12 @@
+{
+  "name": "lion-code",
+  "version": "1.0.0",
+  "description": "<img src=\"https://github.com/user-attachments/assets/d1a15484-2627-474b-b59e-856d8b4c8594\" width=20% height=20%>",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
