@@ -16,9 +16,24 @@ Iggy wove a strand of the Jesuit spirit into LionCode, determined that it would 
 - Functions
 - Optionals
 
-###Examples
+## Examples
 
-| Javascript | LionCode |
+# Printing
+
+
+| LionCode | Javascript |
 | --- | --- |
-| `git status` | List all *new or modified* files |
-| `git diff` | Show file differences that **haven't been** staged |
+| ``` roar -Hello LMU!- ``` | ```console.log("Hello LMU!")```|
+
+# Function Declaration 
+
+| LionCode | Javascript  |
+| --- | --- |
+| ```Ignite greet(name) { student roar -Hello, - + name + -!-```  |```function greet(name) {console.log("Hello, " + name + "!");}greet("Kaia")```;
+# While Loops 
+
+| LionCode | Javascript |
+| --- | --- |
+| ``Prowl x < 3 |  roar -Still prowling on the bluff!-  x = x + 1 |```  |```function greet(name) {console.log("Hello, " + name + "!");}greet("Kaia")```;
+
+# If-Statements 
