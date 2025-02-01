@@ -1,9 +1,9 @@
 x = 10
 if (x is less than 5 ) |
-	roar -${x} is less than 5-;
+	roar -${x} is less than 5-
 |
-else (x is greater than 5)|
-  roar -${x} is greater than 5-;
+else (x is greater than 5) |
+	roar -${x} is greater than 5-
 |
 otherwise |
 	roar -${x} is equal to 5-
