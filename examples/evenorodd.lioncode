@@ -1,7 +1,7 @@
-ignite checkEvenOdd(n) {
+ignite checkEvenOdd(n) |
     if (n % 2 == 0) |
         roar -${n} is even-
     | else |
         roar -${n} is odd-
     |
-}
+|
