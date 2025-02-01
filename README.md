@@ -8,7 +8,7 @@ Once upon a time on the Bluff, Iggy the Lion faced a monumental challenge when h
 Iggy wove a strand of the Jesuit spirit into LionCode, determined that it would not only help others write effective programs but also inspire them to approach technology with a heart rooted in empathy and a commitment to serving the greater good.
 
 ## Service and Justice Features 
-- A Loyola Marymount Inspired  
+- Loyola Marymount Inspired  
 - Based on Javascript
 - Dynamic
 - Object - Oriented
@@ -28,7 +28,7 @@ Iggy wove a strand of the Jesuit spirit into LionCode, determined that it would 
 
 | LionCode | Javascript  |
 | --- | --- |
-| ```Ignite greet(name) \| roar -Hello, - + name + -!-\| greet(-Kaia-)```  |```function greet(name) {console.log("Hello, " + name + "!");}greet("Kaia")```;
+| ```ignite greet(name) \| roar -Hello, - + name + -!-\| greet(-Kaia-)``` |```function greet(name) {console.log("Hello, " + name + "!");}greet("Kaia")```|
 ## Loops 
 
 | LionCode | Javascript |
@@ -44,7 +44,7 @@ Iggy wove a strand of the Jesuit spirit into LionCode, determined that it would 
 ##  Comments 
 | LionCode | Javascript |
 | --- | --- |
-| ``` ~comment goes here!~ ``` | ``` // comment goes here```|
+| ``` ~comment goes here!~ ``` | ``` // comment goes here!```|
 
 
 
