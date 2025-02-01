@@ -1,5 +1,5 @@
 value = 0
-ignite x in range (5) |
+for x in range (5) |
 	value = value + x      ~adding values 1,2,3,4,5~
 | 
 roar -${value}-
