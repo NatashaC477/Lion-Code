@@ -1,0 +1,11 @@
+ignite findMax(numbers) {
+    maxVal = numbers[0]  ~initialize max with first element~
+
+    ignite num in numbers |
+        if (num > maxVal) |
+            maxVal = num
+        |
+    |
+
+    roar -Maximum value is - + maxVal
+}
