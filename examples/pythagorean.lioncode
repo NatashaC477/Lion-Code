@@ -1,8 +1,8 @@
 ~code to find the length of the hypotenuse in a right triangle~
 ignite findHypotenuse(a,b) |
-    serve (a**2 + b**2) ** 0.5;
+    serve (a**2 + b**2) ** 0.5
     
 |
 
-result = findHypotenuse(3,4);
-roar -${result}-;
+result = findHypotenuse(3,4)
+roar -${result}-
