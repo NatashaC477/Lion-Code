@@ -28,7 +28,7 @@ Iggy wove a strand of the Jesuit spirit into LionCode, determined that it would 
 
 | LionCode | Javascript  |
 | --- | --- |
-| ```Ignite greet(name) \| student roar -Hello, - + name + -!-\| greet(-Kaia-)```  |```function greet(name) {console.log("Hello, " + name + "!");}greet("Kaia")```;
+| ```Ignite greet(name) \| roar -Hello, - + name + -!-\| greet(-Kaia-)```  |```function greet(name) {console.log("Hello, " + name + "!");}greet("Kaia")```;
 ## Loops 
 
 | LionCode | Javascript |
