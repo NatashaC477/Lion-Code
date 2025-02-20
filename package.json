@@ -5,10 +5,10 @@
   "type": "module",
   "main": "src/lion-code.js",
   "scripts": {
-    "test": "c8 node --test test/**/*.test.js"
+    "test": "node --test test/*.test.js"
   },
   "keywords": [],
-  "author": "Natasha, A'Kaia, Hannah, Brisa, Jeron, and Dawit",
+  "author": "Natasha, A'Kaia, Hannah, Brisa, Jeron, Dawit, and Elijah",
   "license": "MIT",
   "dependencies": {
     "ohm-js": "^17.1.0"

@@ -1,0 +1,36 @@
+LionCode {
+  Program        = Statement+
+
+  Statement      = PrintStatement
+                 | AssignmentStatement
+                 | IfStatement
+                 | WhileStatement
+                 | FunctionDeclaration
+                 | Comment
+
+  PrintStatement = "roar" StringLiteral
+  AssignmentStatement = Identifier "=" Expression
+
+  IfStatement    = "if" "(" Condition ")" Block ("else" IfStatement | "otherwise" Block)?
+  WhileStatement = "Prowl" Identifier "in" rangeExpr Block
+  rangeExpr = "range" "(" number ")"
+  FunctionDeclaration = "ignite" Identifier "(" ParameterList? ")" Block
+  ParameterList  = Identifier ("," Identifier)*
+
+  Block         = "|" Statement* "|"
+
+  Expression = Term (("+" | "-" | "*" | "/") Term)*
+  Term          = Factor (("*" | "/") Factor)*
+  Factor        = Identifier | number | ParenExpression
+  ParenExpression = "(" Expression ")"
+
+  Condition     = Expression ComparisonOp Expression
+  ComparisonOp = "is " ("less than" | "greater than" | "equal to")
+
+  Comment       = "~" (~"~" any)* "~"
+  Identifier = (letter | "_") (letter | digit | "_")*
+  number = digit+
+  StringLiteral = "-" (~"-" any)* "-"
+
+  space        += " " | "\t" | "\n"
+}
