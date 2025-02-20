@@ -1,36 +1,84 @@
 LionCode {
-  Program        = Statement+
+  Program
+    = Statement+
 
-  Statement      = PrintStatement
-                 | AssignmentStatement
-                 | IfStatement
-                 | WhileStatement
-                 | FunctionDeclaration
-                 | Comment
+  Statement
+    = WhileStatement
+    | IfStatement
+    | PrintStatement
+    | FunctionDeclaration
+    | AssignmentStatement
+    | Comment
 
-  PrintStatement = "roar" StringLiteral
-  AssignmentStatement = Identifier "=" Expression
+  WhileStatement
+    = "Prowl" optSpace Identifier optSpace "in" optSpace rangeExpr Block
 
-  IfStatement    = "if" "(" Condition ")" Block ("else" IfStatement | "otherwise" Block)?
-  WhileStatement = "Prowl" Identifier "in" rangeExpr Block
-  rangeExpr = "range" "(" number ")"
-  FunctionDeclaration = "ignite" Identifier "(" ParameterList? ")" Block
-  ParameterList  = Identifier ("," Identifier)*
+  rangeExpr
+    = "range" "(" number ")"
 
-  Block         = "|" Statement* "|"
+  IfStatement
+    = "if" optSpace "(" Condition ")" Block ElseOption?
 
-  Expression = Term (("+" | "-" | "*" | "/") Term)*
-  Term          = Factor (("*" | "/") Factor)*
-  Factor        = Identifier | number | ParenExpression
-  ParenExpression = "(" Expression ")"
+  ElseOption
+    = optSpace "else" optSpace IfStatement
+    | optSpace "otherwise" optSpace Block
 
-  Condition     = Expression ComparisonOp Expression
-  ComparisonOp = "is " ("less than" | "greater than" | "equal to")
+  PrintStatement
+    = "roar" optSpace StringLiteral
 
-  Comment       = "~" (~"~" any)* "~"
-  Identifier = (letter | "_") (letter | digit | "_")*
-  number = digit+
-  StringLiteral = "-" (~"-" any)* "-"
+  FunctionDeclaration
+    = "ignite" optSpace Identifier optSpace "(" ParameterList? ")" Block
 
-  space        += " " | "\t" | "\n"
+  ParameterList
+    = Identifier (optSpace "," optSpace Identifier)*
+
+  AssignmentStatement
+    = Identifier optSpace "=" optSpace Expression
+
+  Block
+    = "|" Statement* "|"
+
+  Condition
+    = Expression optSpace ComparisonOp optSpace Expression
+
+  ComparisonOp
+    = "is less than"
+    | "is greater than"
+    | "is equal to"
+  
+
+  Expression
+    = Term (("+" | "-" | "*" | "/") Term)*
+
+  Term
+    = Factor (("*" | "/") Factor)*
+
+  Factor
+    = Identifier
+    | number
+    | ParenExpression
+
+  ParenExpression
+    = "(" Expression ")"
+
+  Comment
+    = "~" (~"~" any)* "~"
+
+  Keyword
+    = ("Prowl" | "if" | "otherwise" | "roar" | "ignite" | "else" | "range")
+
+  Identifier
+    Identifier = (letter | "_")#(letter | digit | "_")*
+
+  number
+    = digit+
+
+  StringLiteral
+    = "-" (~"-" any)* "-"
+
+  optSpace
+    = space*
+
+  space
+    += " " | "\t" | "\n"
 }
