@@ -88,24 +88,27 @@ export default function analyze(match) {
       return core.printStatement(core.stringLiteral(value));
     },
 
-    FunctionDeclaration(_ignite, _s1, id, _s2, _lp, paramList, _rp, block) {
+    FunctionDeclaration(_ignite, id, _lp, paramList, _rp, block) {
       const name = id.sourceString;
-    
-      check(!context.lookup(name), `Function '${name}' already declared`, id);
-    
+      
+      // Create new context for function parameters
       const functionContext = context.newChild();
       const oldContext = context;
       context = functionContext;
-    
+      
+      // Process parameters
       let params = [];
       if (paramList.numChildren > 0) {
         params = paramList.analyze();
       }
-    
+      
+      // Analyze the function body
       const body = block.analyze();
-    
+      
+      // Restore the original context
       context = oldContext;
-    
+      
+      // Return the function declaration node
       return core.functionDeclaration(name, params, body);
     },
     
@@ -140,43 +143,47 @@ export default function analyze(match) {
     Condition(left, _s1, op, _s2, right) {
       const leftExpr = left.analyze();
       const rightExpr = right.analyze();
-      return core.condition(leftExpr, op.sourceString, rightExpr);
+      return core.comparisonExpression(op.sourceString, leftExpr, rightExpr);
     },
 
     ComparisonOp(op) {
       return op.sourceString;
     },
 
-    Expression(term, opTerms, _ws) {
+    Expression(term, operations) {
       let result = term.analyze();
-    
-      for (const child of opTerms.children) {
-        const op = child.children[0].sourceString;
-        const right = child.children[1].analyze();
+      
+      for (const operation of operations.children) {
+        const op = operation.children[0].sourceString; // +, -, *, /, %
+        const right = operation.children[1].analyze();
         result = core.binaryExpression(op, result, right);
       }
-    
+      
       return result;
     },
 
-    Term(factor, _ops, factors) {
+    Term(factor, operations) {
       let result = factor.analyze();
       
-      if (factors && factors.children) {
-        for (let i = 0; i < factors.children.length; i++) {
-          const opNode = factors.children[i].children[0];
-          const rightNode = factors.children[i].children[1];
-          const op = opNode.sourceString;
-          const right = rightNode.analyze();
+      if (operations && operations.children) {
+        for (const operation of operations.children) {
+          const op = operation.children[0].sourceString;
+          const right = operation.children[1].analyze();
           result = core.binaryExpression(op, result, right);
         }
       }
       
       return result;
     },
+    number(digits) {
+      return core.numberLiteral(Number(this.sourceString));
+    },
 
-    Factor(f) {
-      return f.analyze(); // Just delegate to Identifier or number
+    Factor(factor) {
+      if (factor.ctorName === 'number') {
+        return core.numberLiteral(Number(factor.sourceString));
+      }
+      return factor.analyze();
     },
 
     ParenExpression(_lp, expr, _rp) {
@@ -190,24 +197,33 @@ export default function analyze(match) {
     Identifier(_firstChar, _restChars) {
       return core.identifier(this.sourceString);
     },
+    // Add this to properly handle the Expression within Interpolation
+Interpolation(_dollar, _open, expr, _close) {
+  return expr.analyze();
+},
 
-    StringLiteral(_open, chars, _close) {
-      return core.stringLiteral(chars.sourceString);
-    },
+// Fix StringLiteral implementation
+StringLiteral(_open, contents, _close) {
+  if (contents.numChildren === 0) {
+    return core.stringLiteral("");
+  }
+  
+  // Simple approach - treat interpolation as a special case
+  if (contents.sourceString.includes("${")) {
+    // Create a simple structure for interpolated strings
+    return core.stringLiteral(contents.sourceString);
+  }
+  
+  return core.stringLiteral(contents.sourceString);
+}
   });
 
-  const semantics = grammar.createSemantics();
-
-  // First, console.log the rules to help debug
-  semantics.addOperation('_ruleInfo', {
-    _default(...children) {
-      return {
-        ruleName: this.ctorName,
-        numChildren: children.length,
-        childrenTypes: children.map(c => c.ctorName)
-      };
-    }
-  });
-
-  return analyzer(match).analyze();
+  try {
+    const result = analyzer(match).analyze();
+    console.log("Analysis result:", JSON.stringify(result, null, 2));
+    return result;
+  } catch (error) {
+    console.error("Analysis error:", error.message);
+    throw error;
+  }
 }

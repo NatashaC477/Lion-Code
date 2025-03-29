@@ -1,4 +1,3 @@
-
 export function program(statements) {
     return { kind: "Program", statements };
   }
@@ -105,10 +104,7 @@ export function program(statements) {
   }
   
   export function stringLiteral(value) {
-    return {
-      kind: "StringLiteral",
-      value, 
-    };
+    return { kind: "StringLiteral", value: value };
   }
   
   export function parameterList(params) {
@@ -117,4 +113,6 @@ export function program(statements) {
       params,
     };
   }
-  
+  export function interpolatedString(parts) {
+    return { kind: "InterpolatedString", parts: parts };
+  }

@@ -45,10 +45,13 @@ LionCode {
     = "is less than"
     | "is greater than"
     | "is equal to"
-  
+    | "=="            
+    | "!="
+    | ">="
+    | "<="
 
   Expression
-    = Term (("+" | "-" | "*" | "/") Term)*
+    = Term (("+" | "-" | "*" | "/" | "%") Term)*
 
   Term
     = Factor (("*" | "/") Factor)*
@@ -74,7 +77,13 @@ LionCode {
     = digit+
 
   StringLiteral
-    = "-" (~"-" any)* "-"
+    = "-" (StringContent | Interpolation)* "-" 
+
+  Interpolation
+    = "${" Expression "}"
+
+  StringContent
+    = ~("-" | "${") any
 
   optSpace
     = space*
