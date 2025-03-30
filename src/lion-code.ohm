@@ -17,11 +17,13 @@ LionCode {
     = "range" "(" number ")"
 
   IfStatement
-    = "if" optSpace "(" Condition ")" Block ElseOption?
+    = "if" optSpace "(" Condition ")" Block ElseOption? OtherwiseOption?
 
   ElseOption
-    = optSpace "else" optSpace IfStatement
-    | optSpace "otherwise" optSpace Block
+    = optSpace "else" optSpace "(" Condition ")" Block
+    
+  OtherwiseOption
+    = optSpace "otherwise" optSpace Block
 
   PrintStatement
     = "roar" optSpace StringLiteral
@@ -30,7 +32,9 @@ LionCode {
     = "ignite" optSpace Identifier optSpace "(" ParameterList? ")" Block
 
   ParameterList
-    = Identifier (optSpace "," optSpace Identifier)*
+    = Identifier ExtraParameters*
+  ExtraParameters
+    = (optSpace "," optSpace Identifier)
 
   AssignmentStatement
     = Identifier optSpace "=" optSpace Expression
@@ -50,11 +54,13 @@ LionCode {
     | ">="
     | "<="
 
-  Expression
-    = Term (("+" | "-" | "*" | "/" | "%") Term)*
+  Expression 
+    = Term (("+" | "-" | "*" | "/" | "%") Term)*  
 
-  Term
+
+  Term       
     = Factor (("*" | "/") Factor)*
+
 
   Factor
     = Identifier

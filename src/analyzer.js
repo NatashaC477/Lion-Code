@@ -59,56 +59,41 @@ export default function analyze(match) {
       
       return core.whileStatement(variable, rangeExpr, body);
     },
-
     rangeExpr(_range, _lp, num, _rp) {
-      return core.rangeExpression(Number(num.sourceString));
+      const value = Number(num.sourceString);
+      return core.rangeExpression(value);
     },
 
-    IfStatement(_if, _s, _lp, condition, _rp, block, elseOption) {
+    IfStatement(_if, _s, _lp, condition, _rp, block, elseOption, otherwiseOption) {
       const conditionNode = condition.analyze();
       const consequent = block.analyze();
       
       let alternate = null;
       if (elseOption.numChildren > 0) {
         alternate = elseOption.analyze();
+      } else if (otherwiseOption.numChildren > 0) {
+        alternate = otherwiseOption.analyze();
       }
       
       return core.ifStatement(conditionNode, consequent, alternate);
     },
 
-    ElseOption(_s1, keyword, _s2, stmtOrBlock) {
-      if (keyword.sourceString === "else") {
-        return stmtOrBlock.analyze(); 
-      } else {
-        return stmtOrBlock.analyze(); 
-      }
+    OtherwiseOption(_s1, keyword, _s2, stmtOrBlock) {
+      return stmtOrBlock.analyze(); // Handles 'otherwise'
     },
+    ElseOption(_opt1, _elseKeyword, _opt2, _openParen, condition, _closeParen, block) {
+      return core.ifStatement(condition.analyze(), block.analyze(), null); // Example adjustment
+    },
+    
     PrintStatement(_roar, _s, str) {
       const value = str.sourceString.slice(1, -1);
       return core.printStatement(core.stringLiteral(value));
     },
 
-    FunctionDeclaration(_ignite, id, _lp, paramList, _rp, block) {
+    FunctionDeclaration(_ignite, _opt1, id, _opt2, _openParen, paramList, _closeParen, block) {
       const name = id.sourceString;
-      
-      // Create new context for function parameters
-      const functionContext = context.newChild();
-      const oldContext = context;
-      context = functionContext;
-      
-      // Process parameters
-      let params = [];
-      if (paramList.numChildren > 0) {
-        params = paramList.analyze();
-      }
-      
-      // Analyze the function body
+      const params = paramList.numChildren > 0 ? paramList.analyze() : [];
       const body = block.analyze();
-      
-      // Restore the original context
-      context = oldContext;
-      
-      // Return the function declaration node
       return core.functionDeclaration(name, params, body);
     },
     
@@ -118,12 +103,13 @@ export default function analyze(match) {
       context.add(first.sourceString, core.identifier(first.sourceString));
       
       for (const part of rest.children) {
-        const name = part.children[3].sourceString;
-        params.push(name);
-        context.add(name, core.identifier(name));
+        // Each part is: optSpace, ",", optSpace, Identifier
+        const param = part.children[3].sourceString; // Correct index for Identifier
+        params.push(param);
+        context.add(param, core.identifier(param));
       }
-    
-      return params;
+      
+      return core.parameterList(params);
     },
     
 
@@ -150,31 +136,26 @@ export default function analyze(match) {
       return op.sourceString;
     },
 
-    Expression(term, operations) {
+    Expression(term, operations, operands) {
       let result = term.analyze();
-      
-      for (const operation of operations.children) {
-        const op = operation.children[0].sourceString; // +, -, *, /, %
-        const right = operation.children[1].analyze();
+      for (const opNode of operations.children) {
+        const op = opNode.children[0].sourceString;
+        const right = opNode.children[1].analyze();
         result = core.binaryExpression(op, result, right);
       }
-      
       return result;
     },
 
-    Term(factor, operations) {
+    Term(factor, operations, operands) {
       let result = factor.analyze();
-      
-      if (operations && operations.children) {
-        for (const operation of operations.children) {
-          const op = operation.children[0].sourceString;
-          const right = operation.children[1].analyze();
-          result = core.binaryExpression(op, result, right);
-        }
+      for (const opNode of operations.children) {
+        const op = opNode.children[0].sourceString;
+        const right = opNode.children[1].analyze();
+        result = core.binaryExpression(op, result, right);
       }
-      
       return result;
-    },
+    },  
+    
     number(digits) {
       return core.numberLiteral(Number(this.sourceString));
     },
@@ -192,30 +173,26 @@ export default function analyze(match) {
 
     Comment(_open, text, _close) {
       return core.comment(text.sourceString);
-    },
+    }, 
 
     Identifier(_firstChar, _restChars) {
       return core.identifier(this.sourceString);
     },
-    // Add this to properly handle the Expression within Interpolation
-Interpolation(_dollar, _open, expr, _close) {
-  return expr.analyze();
-},
+    Interpolation(_dollar, expr, _close) {
+      return expr.analyze(); // Now uses 3 parameters
+    },
 
-// Fix StringLiteral implementation
 StringLiteral(_open, contents, _close) {
-  if (contents.numChildren === 0) {
-    return core.stringLiteral("");
+  const parts = [];
+  for (const part of contents.children) {
+    if (part.ctorName === 'Interpolation') {
+      parts.push(part.analyze());
+    } else {
+      parts.push(core.stringLiteral(part.sourceString));
+    }
   }
-  
-  // Simple approach - treat interpolation as a special case
-  if (contents.sourceString.includes("${")) {
-    // Create a simple structure for interpolated strings
-    return core.stringLiteral(contents.sourceString);
-  }
-  
-  return core.stringLiteral(contents.sourceString);
-}
+  return core.interpolatedString(parts);
+},
   });
 
   try {

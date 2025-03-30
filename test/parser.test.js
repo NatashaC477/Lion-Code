@@ -22,7 +22,7 @@ const syntaxChecks = [
     "Valid nested if-else",
     `if (x is less than 5) | 
       roar -small- | 
-    else if (x is equal to 5) | 
+    else (x is equal to 5) | 
       roar -medium- | 
     otherwise | 
       roar -big- |`
