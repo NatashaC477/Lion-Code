@@ -5,16 +5,22 @@
   "type": "module",
   "main": "src/lion-code.js",
   "scripts": {
-    "test": "node --test test/*.test.js"
+    "test": "c8 node --test test/*.test.js"
   },
   "keywords": [],
   "author": "Natasha, A'Kaia, Hannah, Brisa, Jeron, Dawit, and Elijah",
   "license": "MIT",
   "dependencies": {
+    "graph-stringify": "^1.1.0",
     "ohm-js": "^17.1.0"
   },
   "devDependencies": {
     "c8": "^10.1.3",
     "prettier": "^3.4.2"
+  },
+  "directories": {
+    "doc": "docs",
+    "example": "examples",
+    "test": "test"
   }
 }

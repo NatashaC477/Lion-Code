@@ -1,5 +1,6 @@
 LionCode {
-  Program        = Statement+
+  Program
+    = Statement+
 
   Statement      = PrintStatement
                 | AssignmentStatement
