@@ -8,6 +8,7 @@ LionCode {
     | PrintStatement
     | FunctionDeclaration
     | AssignmentStatement
+    | ReturnStatement
     | Comment
 
   WhileStatement
@@ -57,14 +58,14 @@ LionCode {
   Expression 
     = Term (("+" | "-" | "*" | "/" | "%") Term)*  
 
-
   Term       
     = Factor (("*" | "/") Factor)*
 
-
   Factor
-    = Identifier
+    = FunctionCall
+    | Identifier
     | number
+    | BooleanLiteral
     | ParenExpression
 
   ParenExpression
@@ -74,10 +75,10 @@ LionCode {
     = "~" (~"~" any)* "~"
 
   Keyword
-    = ("Prowl" | "if" | "otherwise" | "roar" | "ignite" | "else" | "range")
+    = ("Prowl" | "if" | "otherwise" | "roar" | "ignite" | "else" | "range" | "serve" | "true" | "false")
 
   Identifier
-    Identifier = (letter | "_")#(letter | digit | "_")*
+    = (letter | "_")#(letter | digit | "_")*
 
   number
     = digit+
@@ -96,4 +97,16 @@ LionCode {
 
   space
     += " " | "\t" | "\n"
+    
+  ReturnStatement 
+    = "serve" optSpace Expression
+    
+  BooleanLiteral
+    = "true" | "false"
+    
+  FunctionCall
+    = Identifier "(" ArgumentList? ")"
+    
+  ArgumentList 
+    = Expression (optSpace "," optSpace Expression)*
 }

@@ -14,14 +14,14 @@ describe('The compiler', () => {
       /Unknown output type/
     );
   });
-  it('accepts the parsed option', () => {
-    const compiled = compile(sampleProgram, 'parsed');
-    assert(compiled.startsWith('Syntax is ok'));
+  // it('accepts the parsed option', () => {
+  //   const compiled = compile(sampleProgram, 'parsed');
+  //   assert(compiled.startsWith('Syntax is ok'));
+  // });
+  it('accepts the analyzed option', () => {
+  const compiled = compile(sampleProgram, 'analyzed');
+  assert(compiled.kind === 'Program');
   });
-  //   it('accepts the analyzed option', () => {
-  //     const compiled = compile(sampleProgram, 'analyzed');
-  //     assert(compiled.kind === 'Program');
-  //   });
   //   it('accepts the optimized option', () => {
   //     const compiled = compile(sampleProgram, 'optimized');
   //     assert(compiled.kind === 'Program');

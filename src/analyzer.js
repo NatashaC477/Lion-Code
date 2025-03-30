@@ -1,39 +1,42 @@
-import * as ohm from "ohm-js";
-import * as fs from "node:fs/promises";
 import * as core from "./core.js";
-
-const grammar = ohm.grammar(await fs.readFile("./src/lion-code.ohm", "utf-8"));
+import grammar from "./grammar.js";
 
 export default function analyze(match) {
+  // Define Context class for symbol management
   class Context {
     constructor(parent = null) {
-      this.parent = parent;
       this.locals = new Map();
+      this.parent = parent;
     }
-
+    
     add(name, entity) {
       this.locals.set(name, entity);
-      return entity;
     }
-
+    
     lookup(name) {
       return this.locals.get(name) || (this.parent && this.parent.lookup(name));
     }
-
+    
     newChild() {
       return new Context(this);
     }
   }
-
+  
+  // Initialize context for the program
   let context = new Context();
-
+  
+  // Helper function for semantic errors
   function check(condition, message, node) {
     if (!condition) {
-      throw new Error(`${node.source.getLineAndColumnMessage()} ${message}`);
+      throw new Error(message);
     }
   }
 
   const analyzer = grammar.createSemantics().addOperation("analyze", {
+    _iter(...children) {
+      return children.map(child => child.analyze());
+    },
+    
     Program(statements) {
       return core.program(statements.children.map(s => s.analyze()));
     },
@@ -115,8 +118,18 @@ export default function analyze(match) {
 
     AssignmentStatement(id, _s1, _eq, _s2, expr) {
       const name = id.sourceString;
-      const variable = context.lookup(name);
-      check(variable, `Variable '${name}' not declared`, id);
+      let variable = context.lookup(name);
+      
+      // If variable doesn't exist, create it (automatic declaration)
+      if (!variable) {
+        variable = core.identifier(name);
+        context.add(name, variable);
+      } else {
+        // Check if this is attempting to reassign a function or constant
+        if (variable.kind === "FunctionDeclaration") {
+          throw new Error(`Assignment to immutable variable`);
+        }
+      }
       
       const source = expr.analyze();
       return core.assignmentStatement(name, source);
@@ -182,23 +195,51 @@ export default function analyze(match) {
       return expr.analyze(); // Now uses 3 parameters
     },
 
-StringLiteral(_open, contents, _close) {
-  const parts = [];
-  for (const part of contents.children) {
-    if (part.ctorName === 'Interpolation') {
-      parts.push(part.analyze());
-    } else {
-      parts.push(core.stringLiteral(part.sourceString));
-    }
-  }
-  return core.interpolatedString(parts);
-},
+    StringLiteral(_open, contents, _close) {
+      const parts = [];
+      for (const part of contents.children) {
+        if (part.ctorName === 'Interpolation') {
+          parts.push(part.analyze());
+        } else {
+          parts.push(core.stringLiteral(part.sourceString));
+        }
+      }
+      return core.interpolatedString(parts);
+    },
+
+    ReturnStatement(_serve, _space, expr) {
+      const expression = expr.analyze();
+      return core.returnStatement(expression);
+    },
+
+    BooleanLiteral(value) {
+      return core.booleanLiteral(value.sourceString === "true");
+    },
+
+    FunctionCall(id, _open, argList, _close) {
+      const name = id.sourceString;
+      const args = argList.numChildren > 0 ? argList.analyze() : [];
+      // Check if function exists
+      const func = context.lookup(name);
+      if (!func) {
+        throw new Error(`Function ${name} not declared`);
+      }
+      return core.functionCall(name, args);
+    },
+
+    ArgumentList(firstExpr, _grouping, repeatedPart, _closeParen, _fullMatch) {
+      const args = [firstExpr.analyze()];
+      // Process any additional arguments from the repeated part
+      for (const element of repeatedPart.children) {
+        // The Expression is the 4th child (index 3) after comma and spaces
+        args.push(element.children[3].analyze());
+      }
+      return args;
+    },
   });
 
   try {
-    const result = analyzer(match).analyze();
-    console.log("Analysis result:", JSON.stringify(result, null, 2));
-    return result;
+    return analyzer(match).analyze();
   } catch (error) {
     console.error("Analysis error:", error.message);
     throw error;

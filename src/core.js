@@ -116,4 +116,26 @@ export function program(statements) {
   export function interpolatedString(parts) {
     return { kind: "InterpolatedString", parts: parts };
   }
-  
+
+  export function returnStatement(expression) {
+    return {
+      kind: "ReturnStatement",
+      expression
+    };
+  }
+
+  export function booleanLiteral(value) {
+    return {
+      kind: "BooleanLiteral",
+      value
+    };
+  }
+
+  export function functionCall(name, args) {
+    return {
+      kind: "FunctionCall",
+      name,
+      args
+    };
+  }
+
