@@ -1,11 +1,15 @@
 ignite findMax(numbers) |
-    maxVal = numbers[0]  ~initialize max with first element~
+    ~initialize max with first element~
+    maxVal = at(numbers, 0)
 
-    ignite num in numbers |
-        if (num > maxVal) |
+    ~set the array length~
+    len = 5
+    Prowl i in range(5) |
+        num = at(numbers, i)
+        if (num >= maxVal) |
             maxVal = num
         |
     |
 
-    roar -Maximum value is - + maxVal
+    roar -Maximum value is ${maxVal}-
 |

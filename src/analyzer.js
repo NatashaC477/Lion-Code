@@ -118,17 +118,21 @@ export default function analyze(match) {
 
     AssignmentStatement(id, _s1, _eq, _s2, expr) {
       const name = id.sourceString;
-      const variable = context.lookup(name);
+      let variable = context.lookup(name);
+      const source = expr.analyze();
       
-      // Throw error if variable doesn't exist
-      check(variable, `Variable '${name}' not declared`, id);
-      
-      // Check immutability
-      if (variable.kind === "FunctionDeclaration") {
+      // If variable doesn't exist yet, create it (automatic declaration)
+      if (!variable) {
+        variable = core.identifier(name);
+        context.add(name, variable);
+      } else if (variable.kind === "FunctionDeclaration") {
+        // Check immutability for functions
         throw new Error(`Assignment to immutable variable`);
+      } else if (context.locals.has(name)) {
+        // Check redeclaration in same scope
+        throw new Error(`Variable already declared: ${name}`);
       }
       
-      const source = expr.analyze();
       return core.assignmentStatement(name, source);
     },
     Block(_open, statements, _close) {
@@ -214,23 +218,27 @@ export default function analyze(match) {
     FunctionCall(id, _open, argList, _close) {
       const name = id.sourceString;
       const args = argList.numChildren > 0 ? argList.analyze() : [];
-      // Check if function exists
-      const func = context.lookup(name);
-      if (!func) {
-        throw new Error(`Function ${name} not declared`);
-      }
       return core.functionCall(name, args);
     },
 
-    ArgumentList(firstExpr, _grouping, repeatedPart, _closeParen, _fullMatch) {
-      const args = [firstExpr.analyze()];
-      // Process any additional arguments from the repeated part
-      for (const element of repeatedPart.children) {
-        // The Expression is the 4th child (index 3) after comma and spaces
-        args.push(element.children[3].analyze());
+    ArgumentList(first, _comma, _space1, _space2, rest) {
+      // For the case with a single argument
+      if (!first || first.numChildren === 0) {
+        return [];
       }
+      
+      const args = [first.analyze()];
+      
+      // Process any additional arguments
+      if (rest && rest.numChildren > 0) {
+        for (const part of rest.children) {
+          args.push(part.analyze());
+        }
+      }
+      
       return args;
     },
+    
     BreakStatement(_) {
       throw new Error("Break can only appear in a loop");
     },

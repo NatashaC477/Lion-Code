@@ -1,5 +1,5 @@
 value = 0
-for x in range (5) |
-	value = value + x      ~adding values 1,2,3,4,5~
+Prowl x in range(5) |
+    value = value + x      ~adding values 0,1,2,3,4~
 | 
 roar -${value}-
