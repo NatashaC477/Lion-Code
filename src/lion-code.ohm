@@ -10,6 +10,7 @@ LionCode {
     | AssignmentStatement
     | ReturnStatement
     | Comment
+    | BreakStatement
 
   WhileStatement
     = "Prowl" optSpace Identifier optSpace "in" optSpace rangeExpr Block
@@ -84,7 +85,7 @@ LionCode {
     = digit+
 
   StringLiteral
-    = "-" (StringContent | Interpolation)* "-" 
+    = "-" (Interpolation | ~("-" | "${") any)* "-"
 
   Interpolation
     = "${" Expression "}"
@@ -109,4 +110,7 @@ LionCode {
     
   ArgumentList 
     = Expression (optSpace "," optSpace Expression)*
+  BreakStatement
+  = "break"
+    
 }

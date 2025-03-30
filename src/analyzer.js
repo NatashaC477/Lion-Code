@@ -85,12 +85,13 @@ export default function analyze(match) {
       return stmtOrBlock.analyze(); // Handles 'otherwise'
     },
     ElseOption(_opt1, _elseKeyword, _opt2, _openParen, condition, _closeParen, block) {
-      return core.ifStatement(condition.analyze(), block.analyze(), null); // Example adjustment
+      return core.ifStatement(condition.analyze(), block.analyze(), null);
     },
     
+    
     PrintStatement(_roar, _s, str) {
-      const value = str.sourceString.slice(1, -1);
-      return core.printStatement(core.stringLiteral(value));
+      // Extract content between the hyphens (remove the first and last character)
+      return core.printStatement(str.analyze());
     },
 
     FunctionDeclaration(_ignite, _opt1, id, _opt2, _openParen, paramList, _closeParen, block) {
@@ -107,34 +108,29 @@ export default function analyze(match) {
       
       for (const part of rest.children) {
         // Each part is: optSpace, ",", optSpace, Identifier
-        const param = part.children[3].sourceString; // Correct index for Identifier
+        const param = part.children[3].sourceString; // Verify index matches grammar
         params.push(param);
         context.add(param, core.identifier(param));
       }
-      
       return core.parameterList(params);
     },
     
 
     AssignmentStatement(id, _s1, _eq, _s2, expr) {
       const name = id.sourceString;
-      let variable = context.lookup(name);
+      const variable = context.lookup(name);
       
-      // If variable doesn't exist, create it (automatic declaration)
-      if (!variable) {
-        variable = core.identifier(name);
-        context.add(name, variable);
-      } else {
-        // Check if this is attempting to reassign a function or constant
-        if (variable.kind === "FunctionDeclaration") {
-          throw new Error(`Assignment to immutable variable`);
-        }
+      // Throw error if variable doesn't exist
+      check(variable, `Variable '${name}' not declared`, id);
+      
+      // Check immutability
+      if (variable.kind === "FunctionDeclaration") {
+        throw new Error(`Assignment to immutable variable`);
       }
       
       const source = expr.analyze();
       return core.assignmentStatement(name, source);
     },
-
     Block(_open, statements, _close) {
       return core.block(statements.children.map(s => s.analyze()));
     },
@@ -142,6 +138,12 @@ export default function analyze(match) {
     Condition(left, _s1, op, _s2, right) {
       const leftExpr = left.analyze();
       const rightExpr = right.analyze();
+      // Check types are compatible
+      check(
+        leftExpr.type === rightExpr.type,
+        `Operands must have the same type`,
+        this
+      );
       return core.comparisonExpression(op.sourceString, leftExpr, rightExpr);
     },
 
@@ -149,25 +151,25 @@ export default function analyze(match) {
       return op.sourceString;
     },
 
-    Expression(term, operations, operands) {
+    Expression(term, operators, operands) {
       let result = term.analyze();
-      for (const opNode of operations.children) {
-        const op = opNode.children[0].sourceString;
-        const right = opNode.children[1].analyze();
-        result = core.binaryExpression(op, result, right);
+      for (let i = 0; i < operators.numChildren; i++) {
+        const op = operators.child(i).sourceString;
+        const rightTerm = operands.child(i).analyze();
+        result = core.binaryExpression(op, result, rightTerm);
       }
       return result;
     },
-
-    Term(factor, operations, operands) {
+    Term(factor, operators, operands) {
       let result = factor.analyze();
-      for (const opNode of operations.children) {
-        const op = opNode.children[0].sourceString;
-        const right = opNode.children[1].analyze();
-        result = core.binaryExpression(op, result, right);
+      for (let i = 0; i < operators.numChildren; i++) {
+        const op = operators.child(i).sourceString;
+        const rightFactor = operands.child(i).analyze();
+        result = core.binaryExpression(op, result, rightFactor);
       }
       return result;
-    },  
+    },
+    
     
     number(digits) {
       return core.numberLiteral(Number(this.sourceString));
@@ -191,20 +193,13 @@ export default function analyze(match) {
     Identifier(_firstChar, _restChars) {
       return core.identifier(this.sourceString);
     },
-    Interpolation(_dollar, expr, _close) {
-      return expr.analyze(); // Now uses 3 parameters
+    Interpolation(_open, expr, _close) {
+      return expr.analyze();
     },
 
     StringLiteral(_open, contents, _close) {
-      const parts = [];
-      for (const part of contents.children) {
-        if (part.ctorName === 'Interpolation') {
-          parts.push(part.analyze());
-        } else {
-          parts.push(core.stringLiteral(part.sourceString));
-        }
-      }
-      return core.interpolatedString(parts);
+      const text = this.sourceString.slice(1, -1); // Remove the hyphens
+      return core.stringLiteral(text);
     },
 
     ReturnStatement(_serve, _space, expr) {
@@ -236,6 +231,10 @@ export default function analyze(match) {
       }
       return args;
     },
+    BreakStatement(_) {
+      throw new Error("Break can only appear in a loop");
+    },
+    
   });
 
   try {
