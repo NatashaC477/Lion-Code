@@ -29,7 +29,7 @@ LionCode {
     = optSpace "otherwise" optSpace Block
 
   PrintStatement
-    = "roar" optSpace StringLiteral
+    = "roar" optSpace (StringLiteral | Identifier | FunctionCall)
 
   FunctionDeclaration
     = "ignite" optSpace Identifier optSpace "(" ParameterList? ")" Block

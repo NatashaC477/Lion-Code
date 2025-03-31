@@ -80,7 +80,8 @@ describe("The LionCode Analyzer", () => {
         kind: "PrintStatement",
         value: { 
           kind: "StringLiteral", 
-          value: "Hello LMU!" 
+          value: "Hello LMU!",
+          type: "string"
         }
       }]
     });

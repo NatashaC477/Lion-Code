@@ -6,6 +6,7 @@ export default function analyze(match) {
     constructor(parent = null) {
       this.locals = new Map();
       this.parent = parent;
+      this.inLoop = false;
     }
     
     add(name, entity) {
@@ -18,6 +19,14 @@ export default function analyze(match) {
     
     newChild() {
       return new Context(this);
+    }
+
+    enterLoop() {
+      this.inLoop = true;
+    }
+
+    exitLoop() {
+      this.inLoop = false;
     }
   }
   
@@ -47,6 +56,7 @@ export default function analyze(match) {
     },
 
     WhileStatement(_prowl, _s1, id, _s2, _in, _s3, range, block) {
+      context.enterLoop();
       const loopContext = context.newChild();
       const oldContext = context;
       context = loopContext;
@@ -60,6 +70,7 @@ export default function analyze(match) {
       const body = block.analyze();
       
       context = oldContext;
+      context.exitLoop();
       
       return core.whileStatement(variable, rangeExpr, body);
     },
@@ -189,16 +200,18 @@ export default function analyze(match) {
     },
 
     Factor(factor) {
+      let result;
       if (factor.ctorName === 'number') {
-        return core.numberLiteral(Number(factor.sourceString));
+        result = core.numberLiteral(Number(factor.sourceString));
       } else if (factor.ctorName === 'Identifier') {
         const name = factor.sourceString;
         const variable = context.lookup(name);
-        if (variable) {
-          return { ...factor.analyze(), type: variable.type };
-        }
+        check(variable, `Undefined variable ${name}`, factor);
+        result = { ...variable, kind: "Identifier" }; 
+      } else {
+        result = factor.analyze();
       }
-      return factor.analyze();
+      return result;
     },
 
     ParenExpression(_lp, expr, _rp) {
@@ -253,8 +266,10 @@ export default function analyze(match) {
     },
     
     BreakStatement(_) {
-      throw new Error("Break can only appear in a loop");
+      check(context.inLoop, "Break can only appear in a loop", this);
+      return core.breakStatement();
     },
+    
     
   });
 
