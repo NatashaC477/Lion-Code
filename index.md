@@ -1,6 +1,5 @@
 ---
 layout: default
-title: Lion Code 🦁
 ---
 
 # Welcome to Lion Code 🦁
