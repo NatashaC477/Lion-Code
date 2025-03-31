@@ -2,6 +2,8 @@
 ### Programming with Purpose, Leading with Values.
 <img src="https://github.com/user-attachments/assets/d1a15484-2627-474b-b59e-856d8b4c8594" width=20% height=20%>
 
+[View the website here](https://natashac477.github.io/Lion-Code/)
+
 #### Why LionCode?
 Once upon a time on the Bluff, Iggy the Lion faced a monumental challenge when he realized that none of the existing programming languages truly honored the Jesuit values he held dear. Driven by a desire to integrate service, justice, and the pursuit of knowledge into every line of code, Iggy decided to create his own language—Lion Code. 
 
