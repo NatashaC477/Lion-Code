@@ -14,10 +14,10 @@ LionCode {
   | FunctionCall 
 
   WhileStatement
-    = "Prowl" optSpace Identifier optSpace "in" optSpace rangeExpr Block
+    = "Prowl" optSpace Identifier optSpace "in" optSpace RangeExpr Block
 
-  rangeExpr
-    = "range" "(" number ")"
+  RangeExpr
+    = "range" "(" Expression ")"
 
   IfStatement
     = "if" optSpace "(" Condition ")" Block ElseOption? OtherwiseOption?

@@ -59,7 +59,8 @@ export function program(statements) {
   export function rangeExpression(value) {
     return {
       kind: "RangeExpression",
-      value, 
+      value,
+      type: "range" 
     };
   }
   
@@ -73,24 +74,45 @@ export function program(statements) {
   }
   
   export function binaryExpression(op, left, right) {
-    let resultType = "number"; 
-    
-    if (["+", "-", "*", "/", "%"].includes(op)) {
-      if (left.type === "string" || right.type === "string") {
-        resultType = "string";
-      } else {
-        resultType = "number";
-      }
-    } else if (["&&", "||"].includes(op)) {
-      resultType = "boolean";
+    // Handle special cases for non-arithmetic operations
+    if (op === "+" && (left.type === "string" || right.type === "string")) {
+      return {
+        kind: "BinaryExpression",
+        op,
+        left,
+        right,
+        type: "string"
+      };
     }
     
-    return { 
+    // Handle arithmetic operations
+    if (["+", "-", "*", "/", "%"].includes(op)) {
+      // Check specific invalid type combinations
+      if (left.type === "boolean" && right.type === "number") {
+        throw new Error(`Cannot apply ${op} to boolean and number`);
+      }
+      
+      if (right.type === "boolean" && left.type === "number") {
+        throw new Error(`Cannot apply ${op} to number and boolean`);
+      }
+      
+      if (op === "%" && (left.type !== "number" || right.type !== "number")) {
+        throw new Error("Modulus requires number operands");
+      }
+      
+      if (op === "/" && right.kind === "NumberLiteral" && right.value === 0) {
+        throw new Error("Cannot divide by zero");
+      }
+    }
+    
+    return {
       kind: "BinaryExpression",
       op,
       left,
       right,
-      type: resultType
+      type: (left.type === right.type) ? left.type : 
+            (left.type === "string" || right.type === "string") ? "string" : 
+            undefined
     };
   }
   
@@ -110,27 +132,10 @@ export function program(statements) {
   }
   
   export function stringLiteral(contents) {
-    // Handle test expectations
-    if (Array.isArray(contents) && contents.length === 1 && typeof contents[0] === 'string') {
-      return {
-        kind: "StringLiteral",
-        value: contents[0],
-        type: "string"
-      };
-    }
-    
-    if (typeof contents === 'string') {
-      return {
-        kind: "StringLiteral",
-        value: contents,
-        type: "string"
-      };
-    }
-    
-   
+    // Use 'value' property as tests expect
     return {
       kind: "StringLiteral",
-      contents: contents,
+      value: typeof contents === 'string' ? contents : contents.sourceString || '',
       type: "string"
     };
   }
@@ -168,6 +173,12 @@ export function program(statements) {
       name,
       args,
       type: "any" 
+    };
+  }
+
+  export function breakStatement() {
+    return {
+      kind: "BreakStatement"
     };
   }
 
