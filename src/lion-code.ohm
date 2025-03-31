@@ -13,31 +13,34 @@ LionCode {
   | BreakStatement
   | FunctionCall 
 
-  WhileStatement
-    = "Prowl" optSpace Identifier optSpace "in" optSpace rangeExpr Block
+  PrintStatement = "roar" space StringLiteral
+  AssignmentStatement = Identifier space "=" space Expression
 
-  rangeExpr
-    = "range" "(" number ")"
+  IfStatement    = "if" space "(" Condition ")" space Block 
+                   ("else" space IfStatement | "else" space Block)?
+  WhileStatement = "Prowl" space Identifier space "in" space RangeExpr space Block
+  RangeExpr      = "range" "(" Number ")"
+  FunctionDeclaration = "ignite" space Identifier "(" ListOf<Identifier, ","> ")" space Block
 
-  IfStatement
-    = "if" optSpace "(" Condition ")" Block ElseOption? OtherwiseOption?
+  Block          = "|" Statement* "|"
 
-  ElseOption
-    = optSpace "else" optSpace "(" Condition ")" Block
-    
-  OtherwiseOption
-    = optSpace "otherwise" optSpace Block
+  Expression     = Term (AddOp Term)*
+  Term           = Factor (MulOp Factor)*
+  Factor         = Identifier | Number | ParenExpression
+  ParenExpression = "(" Expression ")"
 
-  PrintStatement
-    = "roar" optSpace StringLiteral
+  AddOp         = "+" | "-"
+  MulOp         = "*" | "/"
 
-  FunctionDeclaration
-    = "ignite" optSpace Identifier optSpace "(" ParameterList? ")" Block
+  Condition      = Expression space ComparisonOp space Expression
+  ComparisonOp   = "is" space ("less than" | "greater than" | "equal to")
 
-  ParameterList
-    = Identifier ExtraParameters*
-  ExtraParameters
-    = (optSpace "," optSpace Identifier)
+  Comment        = "~" (~"~" any)* "~"
+  Identifier     = letter (alnum | "_")*
+  Number         = digit+
+  StringLiteral  = "\"" char* "\""
+  char          = ~("\"" | "\\") any
+                | "\\" ("\"" | "\\")
 
   AssignmentStatement
     = Identifier optSpace "=" optSpace Expression
