@@ -24,7 +24,7 @@ Meet the team of passionate developers who are dedicated to bringing Lion Code t
   </div>
 
   <div style="width: 200px; text-align: center;">
-    <img src="images/a'kaia.jpg" alt="A'Kaia" style="width: 100%; border-radius: 50%;">
+    <img src="images/akaia.jpg" alt="A'Kaia" style="width: 100%; border-radius: 50%;">
     <strong>A'Kaia Phelps 🌼</strong>
     <p>Loves working at the intersection of creativity and code.</p>
   </div>
@@ -32,6 +32,12 @@ Meet the team of passionate developers who are dedicated to bringing Lion Code t
   <div style="width: 200px; text-align: center;">
     <img src="images/brisa.jpg" alt="Bria" style="width: 100%; border-radius: 50%;">
     <strong>Brisa Goto 🍁</strong>
+    <p>Brings structure to chaos and clarity to complex systems.</p>
+  </div>
+
+  <div style="width: 200px; text-align: center;">
+    <img src="images/dawit.jpg" alt="Bria" style="width: 100%; border-radius: 50%;">
+    <strong>Dawit Solomon 🍁</strong>
     <p>Brings structure to chaos and clarity to complex systems.</p>
   </div>
 
