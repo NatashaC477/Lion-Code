@@ -2,41 +2,117 @@ LionCode {
   Program
     = Statement+
 
-  Statement      = PrintStatement
-                | AssignmentStatement
-                | IfStatement
-                | WhileStatement
-                | FunctionDeclaration
-                | Comment
+  Statement
+  = WhileStatement
+  | IfStatement
+  | PrintStatement
+  | FunctionDeclaration
+  | AssignmentStatement
+  | ReturnStatement
+  | Comment
+  | BreakStatement
+  | FunctionCall 
 
-  PrintStatement = "roar" space StringLiteral
-  AssignmentStatement = Identifier space "=" space Expression
+  WhileStatement
+    = "Prowl" optSpace Identifier optSpace "in" optSpace rangeExpr Block
 
-  IfStatement    = "if" space "(" Condition ")" space Block 
-                   ("else" space IfStatement | "else" space Block)?
-  WhileStatement = "Prowl" space Identifier space "in" space RangeExpr space Block
-  RangeExpr      = "range" "(" Number ")"
-  FunctionDeclaration = "ignite" space Identifier "(" ListOf<Identifier, ","> ")" space Block
+  rangeExpr
+    = "range" "(" number ")"
 
-  Block          = "|" Statement* "|"
+  IfStatement
+    = "if" optSpace "(" Condition ")" Block ElseOption? OtherwiseOption?
 
-  Expression     = Term (AddOp Term)*
-  Term           = Factor (MulOp Factor)*
-  Factor         = Identifier | Number | ParenExpression
-  ParenExpression = "(" Expression ")"
+  ElseOption
+    = optSpace "else" optSpace "(" Condition ")" Block
+    
+  OtherwiseOption
+    = optSpace "otherwise" optSpace Block
 
-  AddOp         = "+" | "-"
-  MulOp         = "*" | "/"
+  PrintStatement
+    = "roar" optSpace StringLiteral
 
-  Condition      = Expression space ComparisonOp space Expression
-  ComparisonOp   = "is" space ("less than" | "greater than" | "equal to")
+  FunctionDeclaration
+    = "ignite" optSpace Identifier optSpace "(" ParameterList? ")" Block
 
-  Comment        = "~" (~"~" any)* "~"
-  Identifier     = letter (alnum | "_")*
-  Number         = digit+
-  StringLiteral  = "\"" char* "\""
-  char          = ~("\"" | "\\") any
-                | "\\" ("\"" | "\\")
+  ParameterList
+    = Identifier ExtraParameters*
+  ExtraParameters
+    = (optSpace "," optSpace Identifier)
 
-  space         += " " | "\t" | "\n"                   
+  AssignmentStatement
+    = Identifier optSpace "=" optSpace Expression
+
+  Block
+    = "|" Statement* "|"  // Allow empty blocks
+
+  Condition
+    = Expression optSpace ComparisonOp optSpace Expression
+
+  ComparisonOp
+    = "is less than"
+    | "is greater than"
+    | "is equal to"
+    | "=="            
+    | "!="
+    | ">="
+    | "<="
+
+  Expression 
+    = Term (("+" | "-" | "*" | "/" | "%") Term)*  
+
+  Term       
+    = Factor (("*" | "/") Factor)*
+
+  Factor
+  = FunctionCall
+  | Identifier
+  | number
+  | BooleanLiteral
+  | StringLiteral  // Add this
+  | ParenExpression
+
+  ParenExpression
+    = "(" Expression ")"
+
+  Comment
+    = "~" (~"~" any)* "~"
+
+  Keyword
+    = ("Prowl" | "if" | "otherwise" | "roar" | "ignite" | "else" | "range" | "serve" | "true" | "false")
+
+  Identifier
+    = (letter | "_")#(letter | digit | "_")*
+
+  number
+    = digit+
+
+  StringLiteral
+    = "-" (Interpolation | ~("-" | "${") any)* "-"
+
+  Interpolation
+    = "${" Expression "}"
+
+  StringContent
+    = ~("-" | "${") any
+
+  optSpace
+    = space*
+
+  space
+    += " " | "\t" | "\n"
+    
+  ReturnStatement 
+    = "serve" optSpace Expression
+    
+  BooleanLiteral
+    = "true" | "false"
+    
+  FunctionCall
+    = Identifier "(" ArgumentList? ")"
+    
+  ArgumentList 
+    = Expression (optSpace "," optSpace Expression)*
+  BreakStatement
+  = "break"
+    
 }
