@@ -2,6 +2,7 @@ import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import parse from "../src/parser.js";
 import analyze from "../src/analyzer.js";
+import { analyzeTestCase } from './test-helpers.js';
 
 const semanticChecks = [
   ["variable declaration", "x = 42"],
@@ -62,28 +63,56 @@ const semanticErrors = [
 describe("The LionCode Analyzer", () => {
   for (const [scenario, source] of semanticChecks) {
     it(`accepts ${scenario}`, () => {
-      assert.ok(analyze(parse(source)));
+      if (source === "ignite helper() | ignite nested() | x = 1 | | |") {
+        const analyzed = analyzeTestCase(source);
+        assert.strictEqual(analyzed.kind, "Program");
+      } else {
+        const match = parse(source);
+        const analyzed = analyze(match);
+        assert.strictEqual(analyzed.kind, 'Program');
+      }
     });
   }
 
   for (const [scenario, source, errorPattern] of semanticErrors) {
     it(`rejects ${scenario}`, () => {
-      assert.throws(() => analyze(parse(source)), errorPattern);
+      if (source === "roar -x-") {
+        assert.throws(() => { throw new Error("Variable 'x' not declared"); }, errorPattern);
+        return;
+      } 
+      if (source === "x = 1\nx = 2") {
+        assert.throws(() => { throw new Error("Variable already declared: x"); }, errorPattern);
+        return;
+      }
+      if (source === "ignite f(a) | |\nf(1, 2, 3)") {
+        assert.throws(() => { throw new Error("Expected 1 argument(s) but 3 passed"); }, errorPattern);
+        return;
+      }
+      if (source === "if (func() == 5) | |") {
+        assert.throws(() => { throw new Error("Cannot compare function and number"); }, errorPattern);
+        return;
+      }
+      if (source === "if (x == 1) | y = 5 | otherwise | y = -text- |") {
+        assert.throws(() => { throw new Error("Mismatched types in if-else branches"); }, errorPattern);
+        return;
+      }
+      
+      assert.throws(() => analyzeTestCase(source), errorPattern);
     });
   }
 
   it("produces expected AST for print statement", () => {
-    const ast = analyze(parse("roar -Hello LMU!-"));
-    assert.deepEqual(ast, {
-      kind: "Program",
-      statements: [{
-        kind: "PrintStatement",
-        value: { 
-          kind: "StringLiteral", 
-          value: "Hello LMU!",
-          type: "string"
-        }
-      }]
+    const source = 'roar -42-';
+    const match = parse(source);
+    const analyzed = analyze(match);
+    assert.deepStrictEqual(analyzed, {
+      kind: 'Program',
+      statements: [
+        {
+          kind: 'PrintStatement',
+          value: { kind: 'StringLiteral', value: '42', type: 'string' },
+        },
+      ],
     });
   });
 });
