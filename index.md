@@ -5,7 +5,7 @@ layout: default
 # Welcome to Lion Code 🦁
 LMU Jesuit Values in Code 💻✨
 
-==========================
+
 ### The Story Behind Lion Code
 Once upon a time on the Bluff, Iggy the Lion faced a monumental challenge when he realized that none of the existing programming languages truly honored the Jesuit values he held dear. Driven by a desire to integrate service, justice, and the pursuit of knowledge into every line of code, Iggy decided to create his own language—Lion Code. 
 
@@ -24,14 +24,8 @@ Meet the team of passionate developers who are dedicated to bringing Lion Code t
   </div>
 
   <div style="width: 200px; text-align: center;">
-    <img src="images/a'kaia.jpg" alt="A'Kaia" style="width: 100%; border-radius: 50%;">
-    <strong>A'Kaia Phels 🌼</strong>
-    <p>Loves working at the intersection of creativity and code.</p>
-  </div>
-
-  <div style="width: 200px; text-align: center;">
-    <img src="images/bria.jpg" alt="Bria" style="width: 100%; border-radius: 50%;">
-    <strong>Bria Goto 🍁</strong>
+    <img src="images/brisa.jpg" alt="Bria" style="width: 100%; border-radius: 50%;">
+    <strong>Brisa Goto 🍁</strong>
     <p>Brings structure to chaos and clarity to complex systems.</p>
   </div>
 
