@@ -116,7 +116,7 @@ Meet the team of passionate developers who are dedicated to bringing Lion Code t
 
   <div style="width: 200px; text-align: center;">
     <strong>Brisa Goto 🍁</strong>
-    <p>Junior | Backend developer who builds efficient systems and APIs.</p>
+    <p>Senior | Backend developer who builds efficient systems and APIs.</p>
   </div>
 
   <div style="width: 200px; text-align: center;">
