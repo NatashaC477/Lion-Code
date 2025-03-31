@@ -18,27 +18,29 @@ Meet the team of passionate developers who are dedicated to bringing Lion Code t
 <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 30px;">
 
   <div style="width: 200px; text-align: center;">
-    <img src="images/natasha.jpg" alt="Natasha" style="width: 100%; border-radius: 50%;">
+    <img src="Lion-Code/images/natasha.jpg" alt="Natasha" style="width: 100%; border-radius: 50%;">
     <strong>Natasha Cordova-Diba 🌸</strong>
     <p>Always learning, always building.</p>
   </div>
 
   <div style="width: 200px; text-align: center;">
-    <img src="images/akaia.jpg" alt="A'Kaia" style="width: 100%; border-radius: 50%;">
+    <img src="Lion-Code/images/akaia.jpg" alt="A'Kaia" style="width: 100%; border-radius: 50%;">
     <strong>A'Kaia Phelps 🌼</strong>
     <p>Loves working at the intersection of creativity and code.</p>
   </div>
 
   <div style="width: 200px; text-align: center;">
-    <img src="images/brisa.jpg" alt="Bria" style="width: 100%; border-radius: 50%;">
+    <img src="Lion-Code/images/brisa.jpg" alt="Bria" style="width: 100%; border-radius: 50%;">
     <strong>Brisa Goto 🍁</strong>
     <p>Brings structure to chaos and clarity to complex systems.</p>
   </div>
 
+  <div style="flex-basis: 100%; height: 0;"></div>
+
   <div style="width: 200px; text-align: center;">
-    <img src="images/dawit.jpg" alt="Bria" style="width: 100%; border-radius: 50%;">
-    <strong>Dawit Solomon 🍁</strong>
-    <p>Brings structure to chaos and clarity to complex systems.</p>
+    <img src="Lion-Code/images/dawit.jpg" alt="Bria" style="width: 100%; border-radius: 50%;">
+    <strong>Dawit Solomon 🔥</strong>
+    <p>Solves problems with code and calm precision.</p>
   </div>
 
 </div>
