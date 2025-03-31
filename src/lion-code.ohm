@@ -3,14 +3,15 @@ LionCode {
     = Statement+
 
   Statement
-    = WhileStatement
-    | IfStatement
-    | PrintStatement
-    | FunctionDeclaration
-    | AssignmentStatement
-    | ReturnStatement
-    | Comment
-    | BreakStatement
+  = WhileStatement
+  | IfStatement
+  | PrintStatement
+  | FunctionDeclaration
+  | AssignmentStatement
+  | ReturnStatement
+  | Comment
+  | BreakStatement
+  | FunctionCall 
 
   WhileStatement
     = "Prowl" optSpace Identifier optSpace "in" optSpace rangeExpr Block
@@ -42,7 +43,7 @@ LionCode {
     = Identifier optSpace "=" optSpace Expression
 
   Block
-    = "|" Statement* "|"
+    = "|" Statement* "|"  // Allow empty blocks
 
   Condition
     = Expression optSpace ComparisonOp optSpace Expression
@@ -63,11 +64,12 @@ LionCode {
     = Factor (("*" | "/") Factor)*
 
   Factor
-    = FunctionCall
-    | Identifier
-    | number
-    | BooleanLiteral
-    | ParenExpression
+  = FunctionCall
+  | Identifier
+  | number
+  | BooleanLiteral
+  | StringLiteral  // Add this
+  | ParenExpression
 
   ParenExpression
     = "(" Expression ")"

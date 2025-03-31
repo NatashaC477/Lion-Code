@@ -2,7 +2,6 @@ import * as core from "./core.js";
 import grammar from "./grammar.js";
 
 export default function analyze(match) {
-  // Define Context class for symbol management
   class Context {
     constructor(parent = null) {
       this.locals = new Map();
@@ -22,10 +21,8 @@ export default function analyze(match) {
     }
   }
   
-  // Initialize context for the program
   let context = new Context();
   
-  // Helper function for semantic errors
   function check(condition, message, node) {
     if (!condition) {
       throw new Error(message);
@@ -33,6 +30,10 @@ export default function analyze(match) {
   }
 
   const analyzer = grammar.createSemantics().addOperation("analyze", {
+    _terminal() {
+      return this.sourceString;
+    },
+    
     _iter(...children) {
       return children.map(child => child.analyze());
     },
@@ -52,7 +53,7 @@ export default function analyze(match) {
       
       const variable = id.sourceString;
       const varNode = core.identifier(variable);
-      context.add(variable, varNode);
+      context.add(variable, core.identifier(variable, "number"));
       
       const rangeExpr = range.analyze();
       
@@ -82,7 +83,7 @@ export default function analyze(match) {
     },
 
     OtherwiseOption(_s1, keyword, _s2, stmtOrBlock) {
-      return stmtOrBlock.analyze(); // Handles 'otherwise'
+      return stmtOrBlock.analyze();
     },
     ElseOption(_opt1, _elseKeyword, _opt2, _openParen, condition, _closeParen, block) {
       return core.ifStatement(condition.analyze(), block.analyze(), null);
@@ -90,7 +91,6 @@ export default function analyze(match) {
     
     
     PrintStatement(_roar, _s, str) {
-      // Extract content between the hyphens (remove the first and last character)
       return core.printStatement(str.analyze());
     },
 
@@ -98,7 +98,9 @@ export default function analyze(match) {
       const name = id.sourceString;
       const params = paramList.numChildren > 0 ? paramList.analyze() : [];
       const body = block.analyze();
-      return core.functionDeclaration(name, params, body);
+      const func = core.functionDeclaration(name, params, body);
+      context.add(name, func);
+      return func;
     },
     
 
@@ -107,8 +109,7 @@ export default function analyze(match) {
       context.add(first.sourceString, core.identifier(first.sourceString));
       
       for (const part of rest.children) {
-        // Each part is: optSpace, ",", optSpace, Identifier
-        const param = part.children[3].sourceString; // Verify index matches grammar
+        const param = part.children[3].sourceString; 
         params.push(param);
         context.add(param, core.identifier(param));
       }
@@ -118,19 +119,21 @@ export default function analyze(match) {
 
     AssignmentStatement(id, _s1, _eq, _s2, expr) {
       const name = id.sourceString;
-      let variable = context.lookup(name);
       const source = expr.analyze();
-      
-      // If variable doesn't exist yet, create it (automatic declaration)
-      if (!variable) {
-        variable = core.identifier(name);
-        context.add(name, variable);
-      } else if (variable.kind === "FunctionDeclaration") {
-        // Check immutability for functions
-        throw new Error(`Assignment to immutable variable`);
-      } else if (context.locals.has(name)) {
-        // Check redeclaration in same scope
-        throw new Error(`Variable already declared: ${name}`);
+      const variable = context.lookup(name);
+
+      if (variable) {
+        if (variable.kind === "FunctionDeclaration") {
+          throw new Error(`Assignment to immutable variable`);
+        }
+        
+        if (variable.type && source.type && variable.type !== source.type) {
+          throw new Error(`Cannot reassign ${name} from ${variable.type} to ${source.type}`);
+        }
+      } else {
+        const newVariable = core.identifier(name, source.type);
+        context.add(name, newVariable);
+        return core.assignmentStatement(newVariable, source); // Pass variable node
       }
       
       return core.assignmentStatement(name, source);
@@ -142,12 +145,18 @@ export default function analyze(match) {
     Condition(left, _s1, op, _s2, right) {
       const leftExpr = left.analyze();
       const rightExpr = right.analyze();
-      // Check types are compatible
-      check(
-        leftExpr.type === rightExpr.type,
-        `Operands must have the same type`,
-        this
-      );
+      
+      const isEqualityOp = ["==", "!=", "is equal to"].includes(op.sourceString);
+      if (!isEqualityOp) {
+        if (leftExpr.type !== rightExpr.type) {
+          throw new Error(`Type mismatch: ${leftExpr.type || 'null'} vs ${rightExpr.type || 'null'}`);
+        }
+      }
+      
+      if (leftExpr.type && !["number", "string", "boolean"].includes(leftExpr.type)) {
+        throw new Error(`Cannot compare ${leftExpr.type} values`);
+      }
+      
       return core.comparisonExpression(op.sourceString, leftExpr, rightExpr);
     },
 
@@ -182,6 +191,12 @@ export default function analyze(match) {
     Factor(factor) {
       if (factor.ctorName === 'number') {
         return core.numberLiteral(Number(factor.sourceString));
+      } else if (factor.ctorName === 'Identifier') {
+        const name = factor.sourceString;
+        const variable = context.lookup(name);
+        if (variable) {
+          return { ...factor.analyze(), type: variable.type };
+        }
       }
       return factor.analyze();
     },
@@ -202,8 +217,8 @@ export default function analyze(match) {
     },
 
     StringLiteral(_open, contents, _close) {
-      const text = this.sourceString.slice(1, -1); // Remove the hyphens
-      return core.stringLiteral(text);
+      const analyzedContents = contents.children.map(c => c.analyze());
+      return core.stringLiteral(analyzedContents); 
     },
 
     ReturnStatement(_serve, _space, expr) {
@@ -222,14 +237,12 @@ export default function analyze(match) {
     },
 
     ArgumentList(first, _comma, _space1, _space2, rest) {
-      // For the case with a single argument
       if (!first || first.numChildren === 0) {
         return [];
       }
       
       const args = [first.analyze()];
       
-      // Process any additional arguments
       if (rest && rest.numChildren > 0) {
         for (const part of rest.children) {
           args.push(part.analyze());
