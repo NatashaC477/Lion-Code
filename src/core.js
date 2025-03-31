@@ -49,7 +49,6 @@ export function program(statements) {
     };
   }
   
-  // ~ any text ~
   export function comment(value) {
     return {
       kind: "Comment",
@@ -74,13 +73,11 @@ export function program(statements) {
   }
   
   export function binaryExpression(op, left, right) {
-    // Determine result type based on operands
-    let resultType = "number"; // Default to number
+    let resultType = "number"; 
     
-    // Handle specific operators
     if (["+", "-", "*", "/", "%"].includes(op)) {
       if (left.type === "string" || right.type === "string") {
-        resultType = "string"; // String concat for +
+        resultType = "string";
       } else {
         resultType = "number";
       }
