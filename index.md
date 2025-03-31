@@ -32,8 +32,6 @@ Meet the team of passionate developers who are dedicated to bringing Lion Code t
     <p>Junior | Backend developer who builds efficient systems and APIs.</p>
   </div>
 
-  <div style="flex-basis: 100%; height: 0;"></div>
-
   <div style="width: 200px; text-align: center;">
     <strong>Dawit Solomon 🔥</strong>
     <p>Junior | Software engineer with experience in project coordination and backend logic.</p>
