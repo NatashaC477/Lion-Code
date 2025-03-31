@@ -3,5 +3,5 @@ remote_theme: pages-themes/hacker@v0.2.0
 plugins:
   - jekyll-remote-theme
 
-title: My Cool Hacker Site
-description: A personal site built with GitHub Pages and the Hacker theme
+title: Lion Code 🦁
+description: The official website of Lion Code
