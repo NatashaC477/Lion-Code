@@ -18,29 +18,40 @@ Meet the team of passionate developers who are dedicated to bringing Lion Code t
 <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 30px;">
 
   <div style="width: 200px; text-align: center;">
-    <img src="Lion-Code/images/natasha.jpg" alt="Natasha" style="width: 100%; border-radius: 50%;">
     <strong>Natasha Cordova-Diba 🌸</strong>
-    <p>Always learning, always building.</p>
+    <p>Junior | Full-stack developer focused on building intuitive, scalable web apps.</p>
   </div>
 
   <div style="width: 200px; text-align: center;">
-    <img src="Lion-Code/images/akaia.jpg" alt="A'Kaia" style="width: 100%; border-radius: 50%;">
     <strong>A'Kaia Phelps 🌼</strong>
-    <p>Loves working at the intersection of creativity and code.</p>
+    <p>Junior | Full-stack developer interested in design and an eye for detail.</p>
   </div>
 
   <div style="width: 200px; text-align: center;">
-    <img src="Lion-Code/images/brisa.jpg" alt="Bria" style="width: 100%; border-radius: 50%;">
     <strong>Brisa Goto 🍁</strong>
-    <p>Brings structure to chaos and clarity to complex systems.</p>
+    <p>Junior | Backend developer who builds efficient systems and APIs.</p>
   </div>
 
   <div style="flex-basis: 100%; height: 0;"></div>
 
   <div style="width: 200px; text-align: center;">
-    <img src="Lion-Code/images/dawit.jpg" alt="Bria" style="width: 100%; border-radius: 50%;">
     <strong>Dawit Solomon 🔥</strong>
-    <p>Solves problems with code and calm precision.</p>
+    <p>Junior | Software engineer with experience in project coordination and backend logic.</p>
+  </div>
+
+  <div style="width: 200px; text-align: center;">
+    <strong>Hannah Holden 💐</strong>
+    <p>Junior | Full-stack developer skilled in JavaScript, Python, and responsive design.</p>
+  </div>
+
+  <div style="width: 200px; text-align: center;">
+    <strong>Jeron Alford 🪸</strong>
+    <p>Junior | Developer focused on rapid prototyping and turning ideas into products.</p>
+  </div>
+
+  <div style="width: 200px; text-align: center;">
+    <strong>Elijah Senior 🌾</strong>
+    <p>Senior | UI/UX designer who specializes in creating clean, user-friendly interfaces.</p>
   </div>
 
 </div>
