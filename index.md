@@ -3,34 +3,34 @@ layout: default
 ---
 
 # Welcome to Lion Code 🦁
-LMU Jesuit Values in Code 💻✨
+Putting LMU Jesuit Values in Code 💻✨
 
 
-### The Story Behind Lion Code
+## The Story Behind Lion Code
 Once upon a time on the Bluff, Iggy the Lion faced a monumental challenge when he realized that none of the existing programming languages truly honored the Jesuit values he held dear. Driven by a desire to integrate service, justice, and the pursuit of knowledge into every line of code, Iggy decided to create his own language—Lion Code. 
 
 Iggy wove a strand of the Jesuit spirit into LionCode, determined that it would not only help others write effective programs but also inspire them to approach technology with a heart rooted in empathy and a commitment to serving the greater good.
  
-### Example Code Snippets ✂️
+## Example Code Snippets ✂️
 
-#### Printing
+### Printing
 
 | LionCode | Javascript |
 | --- | --- |
 | ``` roar -Hello LMU!- ``` | ```console.log("Hello LMU!")```| 
 
-#### Function Declaration 
+### Function Declaration 
 
 | LionCode | Javascript  |
 | --- | --- |
 | ```ignite greet(name) \| roar -Hello, - + name + -!-\| greet(-Kaia-)``` |```function greet(name) {console.log("Hello, " + name + "!");}greet("Kaia")```|
-#### Loops 
+### Loops 
 
 | LionCode | Javascript |
 | --- | --- |
 | ```for x in range (5) \|…\| ```  |```for x in range (5) { … };```
 
-#### If-Statements 
+### If-Statements 
 | LionCode | Javascript |
 | --- | --- |
 | ```if (x is less than 5) \|…\| else (x is greater than 5) \|…\| otherwise \|…\| ``` | ```if (x < 5 ) {…} else if (x > 5){…} else {…};```|
@@ -41,7 +41,7 @@ Iggy wove a strand of the Jesuit spirit into LionCode, determined that it would 
 | --- | --- |
 | ``` ~comment goes here!~ ``` | ``` // comment goes here!```|
 
-### Our Team
+## Our Team
 Meet the team of passionate developers who are dedicated to bringing Lion Code to life:
 
 <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 30px;">
