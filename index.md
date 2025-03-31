@@ -125,7 +125,7 @@ Meet the team of passionate developers who are dedicated to bringing Lion Code t
   </div>
 
   <div style="width: 200px; text-align: center;">
-    <strong>Hannah Holden 💐</strong>
+    <strong>Hannah Holden 🪻</strong>
     <p>Junior | Full-stack developer skilled in JavaScript, Python, and responsive design.</p>
   </div>
 
