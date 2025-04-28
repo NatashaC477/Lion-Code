@@ -46,7 +46,7 @@ LionCode {
     = "|" Statement* "|"  // Allow empty blocks
 
   Condition
-    = Expression optSpace ComparisonOp optSpace Expression
+    = ComparisonExpression
 
   ComparisonOp
     = "is less than"
@@ -58,10 +58,18 @@ LionCode {
     | "<="
 
   Expression 
-    = Term (("+" | "-" | "*" | "/" | "%") Term)*  
+    = ComparisonExpression
+    | ArithmeticExpression
+
+  ComparisonExpression
+  = ArithmeticExpression (optSpace ComparisonOp optSpace ArithmeticExpression)?
+
+
+  ArithmeticExpression
+    = Term (("+" | "-") Term)*  
 
   Term       
-    = Factor (("*" | "/") Factor)*
+    = Factor (("*" | "/" | "%") Factor)*
 
   Factor
   = FunctionCall
