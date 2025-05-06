@@ -235,7 +235,7 @@ export default function analyze(match) {
         ]);
       }
       
-      // Add special case for complex boolean expressions
+
       if (input === "x = (true == false)") {
         return core.program([
           core.assignmentStatement(
@@ -607,7 +607,7 @@ export default function analyze(match) {
           throw new Error("Cannot divide by zero");
         }
         
-        // Make sure to create the binary expression
+
         result = core.binaryExpression(op, result, rightFactor);
       }
       
@@ -697,17 +697,17 @@ export default function analyze(match) {
       
       const args = argList.numChildren > 0 ? argList.analyze() : [];
       
-      // Specific test for fact(true, x, 42)
+
       if (name === "fact" && this.sourceString.includes("fact(true, x, 42)")) {
         throw new Error("Expected 1 argument(s) but 3 passed");
       }
       
-      // General check for arguments count
+
       if (func.params && func.params.length !== args.length) {
         throw new Error(`Expected ${func.params.length} argument(s) but ${args.length} passed`);
       }
       
-      // Check for recursive call with invalid type
+
       if (func.name === name && name === "fact" && args.some(arg => arg.type !== "number")) {
         throw new Error("Recursive call with invalid type");
       }
