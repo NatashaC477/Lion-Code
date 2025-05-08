@@ -6,14 +6,12 @@ import { describe, it } from 'node:test';
 
 describe("The optimizer", () => {
   it("removes self-assignments", () => {
-    const original = core.program([
-      core.assignmentStatement(
-        core.identifier("x", "number"),
-        core.identifier("x", "number")
-      )
-    ]);
+    const original = core.assignmentStatement(
+      core.identifier("x", "number"),
+      core.identifier("x", "number")
+    );
     const optimized = optimize(original);
-    assert.strictEqual(optimized.statements.length, 0);
+    assert.deepStrictEqual(optimized, []);
   });
 
   it("folds binary expressions with number literals", () => {
@@ -332,6 +330,46 @@ describe("The optimizer", () => {
     const optimized = optimize(original);
     assert.strictEqual(optimized.statements[0].condition.operator, "==");
     assert.strictEqual(optimized.statements[0].consequent.statements[0].value.value, "Equal");
+  });
+
+  it("handles undefined or null nodes", () => {
+    const optimized = optimize(null);
+    assert.strictEqual(optimized, null);
+  });
+
+  it("optimizes if-statements with constant conditions", () => {
+    const original = core.ifStatement(
+      core.booleanLiteral(true),
+      core.block([core.printStatement(core.stringLiteral("True branch"))]),
+      core.block([core.printStatement(core.stringLiteral("False branch"))])
+    );
+    const optimized = optimize(original);
+    assert.strictEqual(optimized.kind, "Block");
+    assert.strictEqual(optimized.statements[0].value.value, "True branch");
+  });
+
+  it("folds binary expressions with constants", () => {
+    const original = core.binaryExpression(
+      "+",
+      core.numberLiteral(3),
+      core.numberLiteral(4)
+    );
+    const optimized = optimize(original);
+    assert.strictEqual(optimized.value, 7);
+  });
+
+  it("optimizes unary expressions with literals", () => {
+    const original = core.unaryExpression("-", core.numberLiteral(5));
+    const optimized = optimize(original);
+    assert.strictEqual(optimized.value, -5);
+  });
+
+  it("optimizes function call arguments", () => {
+    const original = core.functionCall("testFunc", [
+      core.binaryExpression("+", core.numberLiteral(2), core.numberLiteral(3))
+    ]);
+    const optimized = optimize(original);
+    assert.strictEqual(optimized.args[0].value, 5);
   });
 });
 
